@@ -1,0 +1,31 @@
+{
+  "name": "pir-led",
+  "version": "1.0.0",
+  "description": "'app to control LED strip lighting powered by a relay'",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cron": "^1.0.9",
+    "express": "^4.13.3",
+    "morgan": "^1.6.1",
+    "node-crontab": "0.0.8",
+    "onoff": "^1.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo 'error: no such command'"
+  },
+  "author": "Chris Dobbins",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github.com/chrisdobbins.git"
+  },
+  "keywords": [
+    "Raspberry Pi, Node.js"
+  ],
+  "bugs": {
+    "url": "https://github.com/github.com/chrisdobbins/issues"
+  },
+  "homepage": "https://github.com/github.com/chrisdobbins#readme"
+}
