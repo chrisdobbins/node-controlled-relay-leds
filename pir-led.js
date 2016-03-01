@@ -53,7 +53,5 @@ function automaticControl() {
         
     });
 
-    process.on('SIGINT', function(pins) {
-        exit(pins);
-    });
+    process.on('SIGINT', exit);
 }
