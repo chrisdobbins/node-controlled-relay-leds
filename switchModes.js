@@ -51,13 +51,13 @@ function automaticControl(relay, newState, response) {
         });
     }
     else {
-	    try {
+        try {
             pir.unexport();
-	    }
-	    finally {
-	          relay.writeSync(0); 
-	          response.status(200).send('automatic mode off');
-	    }
+	}
+	finally {
+	    relay.writeSync(0); 
+	    response.status(200).send('automatic mode off');
+	}
     }
     
     function calibrate() {
@@ -72,7 +72,6 @@ function automaticControl(relay, newState, response) {
         }
     }
 }
-
 
 function controlRelay(pin, newState) {
     console.log(pin);
