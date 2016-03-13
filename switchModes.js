@@ -23,40 +23,42 @@ app.post('/controlLightsAutomatically', function(req, res) {
     var newState = req.body.newState;
     console.log('req.body.newState: ', req.body.newState);
     automaticControl(ledStrip, newState, res);
+    
 });
-
 app.listen(3000);
 process.on('SIGINT', exit);
 
-function automaticControl(relay, newState, response) {
+function automaticControl(device, newState, response) {
     var pirPin = 18;
-    try {
-        var pir = new GPIO(pirPin, 'in', 'both');
-    }
-    catch(err) {
-        response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
-    }
-    if (newState === 'on') {
-       	response.status(200).send('automatic mode on');
+	try {
+            var pir = new GPIO(pirPin, 'in', 'both');
+	}
+	catch(err) {
+	    response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
+	}
+    if (newState === 'on') {    
+	response.status(200).send('automatic mode activation started' + '\n');
         calibrate();
         console.log('Calibration is complete!');
-        relay.writeSync(pir.readSync());
+	var deviceInitialState = pir.readSync() ? 'on' : 'off';
+	controlRelay(device, deviceInitialState);
         pir.watch(function(err, pirValue) {
             if (err) {
                 throw err;
             }           
             var timestamp = new Date(Date.now());
             console.log('pirValue = ' + pirValue + '\n' + 'Time: ' + timestamp.toISOString() + '\n');
-            relay.writeSync(pirValue);
+	    var deviceCurrentState = pirValue ? 'on' : 'off';
+	    controlRelay(device, deviceCurrentState);
         });
     }
     else {
-        try {
+	try {
             pir.unexport();
 	}
 	finally {
-	    relay.writeSync(0); 
-	    response.status(200).send('automatic mode off');
+	    device.writeSync(0); 
+	    response.status(200).send('automatic mode off' + '\n');
 	}
     }
     
@@ -73,12 +75,12 @@ function automaticControl(relay, newState, response) {
     }
 }
 
-function controlRelay(pin, newState) {
-    console.log(pin);
+function controlRelay(device, newState) {
+    console.log(device);
     if (newState === 'on') {
-        pin.writeSync(1);
+        device.writeSync(1);
     } else if (newState === 'off') {
-        pin.writeSync(0);
+        device.writeSync(0);
     }
     else {
         throw err;
