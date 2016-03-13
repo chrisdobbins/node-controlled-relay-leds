@@ -30,12 +30,12 @@ process.on('SIGINT', exit);
 
 function automaticControl(relay, newState, response) {
     var pirPin = 18;
-	try {
-            var pir = new GPIO(pirPin, 'in', 'both');
-	}
-	catch(err) {
-	 response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
-	}
+    try {
+        var pir = new GPIO(pirPin, 'in', 'both');
+    }
+    catch(err) {
+        response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
+    }
     if (newState === 'on') {
        	response.status(200).send('automatic mode on');
         calibrate();
