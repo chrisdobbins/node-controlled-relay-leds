@@ -9,22 +9,27 @@ var ledStrip = new GPIO(ledStripPin, 'out');
 // var green = new GPIO(greenPin, 'out');
 // var blue = new GPIO(bluePin, 'out');
 
+app.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/controlLightsManually', function(req, res) {
+app.post('/manualLights', function(req, res) {
     console.log('ledStrip: ', ledStrip);
+    console.log(req.body);
     var newState = req.body.newState;
-    console.log('req.body.newState: ', req.body.newState);
-    controlRelay(ledStrip, req.body.newState);
+    controlRelay(ledStrip, newState);
     res.status(200).send('lights are '+ newState + '\n');
 });
 
-app.post('/controlLightsAutomatically', function(req, res) {
+app.post('/automaticLights', function(req, res) {
     var newState = req.body.newState;
-    console.log('req.body.newState: ', req.body.newState);
-    automaticControl(ledStrip, newState, res);
-    
+    automaticControl(ledStrip, newState, res);    
 });
+
 app.listen(3000);
 process.on('SIGINT', exit);
 
@@ -57,7 +62,7 @@ function automaticControl(device, newState, response) {
             pir.unexport();
 	}
 	finally {
-	    device.writeSync(0); 
+	    controlRelay(device, newState);  
 	    response.status(200).send('automatic mode off' + '\n');
 	}
     }
