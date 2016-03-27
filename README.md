@@ -15,9 +15,9 @@ This is an application that exposes an API allowing the end user to control a st
 
 ###Software###
 * Node.js modules
-..* onoff
-..* Express.js
-..* body-parser
+  * onoff
+  * Express.js
+  * body-parser
 
 ##To-Do##
 * Functionality to control the colors on the LED strip will be added at a future date. Because the RPi 2 only has two hardware PWM channels, this will likely involve moving everything over to the Espruino Pico, which has 21 PWM pins.
