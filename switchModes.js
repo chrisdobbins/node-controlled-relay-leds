@@ -1,6 +1,7 @@
 var GPIO = require('onoff').Gpio;
 var app = require('express')();
 var bodyParser = require('body-parser');
+var homeSensor = require('./hometemp');
 var ledStripPin = 27;
 var ledStrip = new GPIO(ledStripPin, 'out');
 
@@ -16,6 +17,10 @@ app.all('/', function(req, res, next) {
  });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/temp', function(req, res) {
+    res.json({temp: homeSensor.temp[0], humidity: homeSensor.humidity[0] });
+});
 
 app.post('/manualLights', function(req, res) {
     console.log('ledStrip: ', ledStrip);
@@ -35,36 +40,36 @@ process.on('SIGINT', exit);
 
 function automaticControl(device, newState, response) {
     var pirPin = 18;
-	try {
+        try {
             var pir = new GPIO(pirPin, 'in', 'both');
-	}
-	catch(err) {
-	    response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
-	}
+        }
+        catch(err) {
+            response.status(500).send('cannot start automatic mode. error: ' + err + '\n');
+        }
     if (newState === 'on') {    
-	response.status(200).send('automatic mode activation started' + '\n');
+        response.status(200).send('automatic mode activation started' + '\n');
         calibrate();
         console.log('Calibration is complete!');
-	var deviceInitialState = pir.readSync() ? 'on' : 'off';
-	controlRelay(device, deviceInitialState);
+        var deviceInitialState = pir.readSync() ? 'on' : 'off';
+        controlRelay(device, deviceInitialState);
         pir.watch(function(err, pirValue) {
             if (err) {
                 throw err;
             }           
             var timestamp = new Date(Date.now());
             console.log('pirValue = ' + pirValue + '\n' + 'Time: ' + timestamp.toISOString() + '\n');
-	    var deviceCurrentState = pirValue ? 'on' : 'off';
-	    controlRelay(device, deviceCurrentState);
+            var deviceCurrentState = pirValue ? 'on' : 'off';
+            controlRelay(device, deviceCurrentState);
         });
     }
     else {
-	try {
+        try {
             pir.unexport();
-	}
-	finally {
-	    controlRelay(device, newState);  
-	    response.status(200).send('automatic mode off' + '\n');
-	}
+        }
+        finally {
+            controlRelay(device, newState);  
+            response.status(200).send('automatic mode off' + '\n');
+        }
     }
     
     function calibrate() {
@@ -102,4 +107,4 @@ function exit() {
     }
 }
 
-function noop() {};    
+function noop() {}; 
