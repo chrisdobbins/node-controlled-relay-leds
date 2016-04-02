@@ -9,7 +9,8 @@
     "express": "^4.13.3",
     "morgan": "^1.6.1",
     "node-crontab": "0.0.8",
-    "onoff": "^1.0.4"
+    "onoff": "^1.0.4",
+    "node-dht-sensor": "0.0.8"
   },
   "devDependencies": {},
   "scripts": {
