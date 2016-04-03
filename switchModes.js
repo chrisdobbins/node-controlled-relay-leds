@@ -60,9 +60,15 @@ function automaticControl(device, newState, response) {
             }
             console.log(pirValue);
             var now = new Date(Date.now());
-            // subtracting 4 accounts for the time zone difference
-            if (pirValue === 1 && ((now.getHours() - 4 < 18) && (now.getHours() - 4 > 7))) {
-                console.log(now.getHours());
+            var nowWithOffset = new Date(now);
+            nowWithOffset.setHours(now.getHours() - 4);
+            var todayWithOffset = nowWithOffset.getDay();
+            // sends messages only if activity occurs between 8 a.m. and 6 p.m.
+            // on Sun-Thur
+            console.log(todayWithOffset);
+            if (pirValue === 1 && 
+                (nowWithOffset.getHours()  < 19 && nowWithOffset.getHours() > 7) && 
+                (todayWithOffset > -0 && todayWithOffset < 5) ) {
                 client.sendMessage({
                     to: process.env.TO_PHONE,
                     from: process.env.FROM_PHONE,
@@ -126,4 +132,4 @@ function exit() {
     }
 }
 
-function noop() {};
+function noop() {};  
