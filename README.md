@@ -21,5 +21,5 @@ I've added a bit more functionality to it in the form of SMS notifications if ac
 * Adding functionality to monitor door/window sensors
 * ~~Add functionality to send SMS alerts.~~
 * Add functionality to monitor a solar panel and battery charge.-
-* Refactor the automaticMode function, as it's gotten way too big and goes beyond its original scope
+* Refactor the automaticLights function, as it's gotten way too big and goes beyond its original scope
 * Move things into different modules, as appropriate.
