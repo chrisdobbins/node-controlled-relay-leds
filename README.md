@@ -13,14 +13,9 @@ This is an application that exposes an API allowing the end user to control a st
 * one (1) 1 kOhm resistor
 * one (1) PIR sensor
 
-###Software###
-* Node.js modules
-  * onoff
-  * Express.js
-  * body-parser
-
 ##To-Do##
 * Functionality to control the colors on the LED strip will be added at a future date. Because the RPi 2 only has two hardware PWM channels, this will likely involve moving everything over to the Espruino Pico, which has 21 PWM pins.
 * Adding a computer-generated schematic. The primary hurdle to that has been the difficulty of finding an RGB LED schematic symbol.
-* Adding functionality to monitor door/window sensors and send SMS alerts.
-* Adding functionality to monitor a solar panel and battery charge.
+* Adding functionality to monitor door/window sensors
+* ~~Add functionality to send SMS alerts.~~
+* Add functionality to monitor a solar panel and battery charge.-
