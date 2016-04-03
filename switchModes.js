@@ -2,6 +2,8 @@ var GPIO = require('onoff').Gpio;
 var app = require('express')();
 var bodyParser = require('body-parser');
 var homeSensor = require('./hometemp');
+var dotenv = require('dotenv').load();
+var client = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 var ledStripPin = 27;
 var ledStrip = new GPIO(ledStripPin, 'out');
 
@@ -54,8 +56,25 @@ function automaticControl(device, newState, response) {
         controlRelay(device, deviceInitialState);
         pir.watch(function(err, pirValue) {
             if (err) {
-                throw err;
-            }           
+                throw new Error(err.stack);
+            }
+            console.log(pirValue);
+            var now = new Date(Date.now());
+            // subtracting 4 accounts for the time zone difference
+            if (pirValue === 1 && ((now.getHours() - 4 < 18) && (now.getHours() - 4 > 7))) {
+                console.log(now.getHours());
+                client.sendMessage({
+                    to: process.env.TO_PHONE,
+                    from: process.env.FROM_PHONE,
+                    body: 'Intruder alert! Activity detected on ' + now,
+                }, function(err, response) {
+                    if (err) {
+                        console.log(err.stack);
+                    }
+                    console.log(response.from);
+                    console.log(response.body);
+                });
+            }            
             var timestamp = new Date(Date.now());
             console.log('pirValue = ' + pirValue + '\n' + 'Time: ' + timestamp.toISOString() + '\n');
             var deviceCurrentState = pirValue ? 'on' : 'off';
@@ -107,4 +126,4 @@ function exit() {
     }
 }
 
-function noop() {}; 
+function noop() {};
