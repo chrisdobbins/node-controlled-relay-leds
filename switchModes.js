@@ -68,7 +68,7 @@ function automaticControl(device, newState, response) {
             console.log(todayWithOffset);
             if (pirValue === 1 && 
                 (nowWithOffset.getHours()  < 19 && nowWithOffset.getHours() > 7) && 
-                (todayWithOffset > -0 && todayWithOffset < 5) ) {
+                (todayWithOffset > 0 && todayWithOffset < 5) ) {
                 client.sendMessage({
                     to: process.env.TO_PHONE,
                     from: process.env.FROM_PHONE,
