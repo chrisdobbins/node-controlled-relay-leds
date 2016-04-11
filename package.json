@@ -2,7 +2,7 @@
   "name": "node-controlled-relay-leds",
   "version": "1.0.0",
   "description": "home monitoring and automation app",
-  "main": "index.js",
+  "main": "main.js",
   "dependencies": {
     "body-parser": "^1.15.0",
     "cron": "^1.0.9",
