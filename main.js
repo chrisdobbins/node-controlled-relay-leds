@@ -6,7 +6,7 @@ var dotenv = require('dotenv').load();
 var client = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 var ledStripPin = 27;
 var ledStrip = new GPIO(ledStripPin, 'out');
-
+var request = require('request');
 //var crontab = require('node-crontab');
 // var red = new GPIO(redPin, 'out');
 // var green = new GPIO(greenPin, 'out');
@@ -36,9 +36,22 @@ app.post('/automaticLights', function(req, res) {
     var newState = req.body.newState;
     automaticControl(ledStrip, newState, res);    
 });
+app.post('/manualFan', function(req, res) {
+    var newState = req.body.newState;
+    console.log(newState);
+    controlFan(newState, res);
+});
 
 app.listen(3000);
 process.on('SIGINT', exit);
+
+// function climateControl(cutoffTemp, tempArray) {
+//    tempArray.forEach(function(currentVal) {
+//        while (currentVal > cutoffTemp) {
+//            noop()
+//        }
+//    });
+//}
 
 function automaticControl(device, newState, response) {
     var pirPin = 18;
@@ -67,8 +80,9 @@ function automaticControl(device, newState, response) {
             // on Sun-Thur
             console.log(todayWithOffset);
             if (pirValue === 1 && 
-                (nowWithOffset.getHours()  < 19 && nowWithOffset.getHours() > 7) && 
+                (nowWithOffset.getHours()  < 18 && nowWithOffset.getHours() > 7)&& 
                 (todayWithOffset > 0 && todayWithOffset < 5) ) {
+                
                 client.sendMessage({
                     to: process.env.TO_PHONE,
                     from: process.env.FROM_PHONE,
@@ -118,8 +132,26 @@ function controlRelay(device, newState) {
         device.writeSync(0);
     }
     else {
-        throw err;
+        var invalidStateErr = new Error('invalid state!');
+        console.log(invalidStateErr.message);
+        return
     }
+}
+
+function controlFan(newState, resObj) {
+    var fanState = {
+        'on': process.env.FAN_ON,
+        'off': process.env.FAN_OFF,
+    };
+    request(fanState[newState], function(err, res) {
+        if (!err) {
+            resObj.status(200).send('fan is ' + newState);
+        } else {
+            resObj.status(500).send('server error: ' + err.stack);
+            console.log(err.stack);
+            return
+        }
+    });
 }
 
 function exit() {
@@ -132,4 +164,4 @@ function exit() {
     }
 }
 
-function noop() {};  
+function noop() {};
