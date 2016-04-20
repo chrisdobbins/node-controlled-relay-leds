@@ -19,8 +19,10 @@ This is an application that exposes an API allowing the end user to control a st
   * Express.js
   * body-parser
 
-##To-Do##
-* Functionality to control the colors on the LED strip will be added at a future date. Because the RPi 2 only has two hardware PWM channels, this will likely involve moving everything over to the Espruino Pico, which has 21 PWM pins.
-* Adding a computer-generated schematic. The primary hurdle to that has been the difficulty of finding an RGB LED schematic symbol.
-* Adding functionality to monitor door/window sensors and send SMS alerts.
-* Adding functionality to monitor a solar panel and battery charge.
+##To-Do List (in order of priority)##
+* Rewrite and refactor using ES6
+* Unit tests
+* Add functionality to control the colors on the LED strip.=
+* Add a computer-generated schematic
+* Add functionality to monitor door/window sensors and send SMS alerts
+* Add functionality to monitor a solar panel and battery charge
